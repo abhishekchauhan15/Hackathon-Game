@@ -511,7 +511,7 @@ function lifeCollision() {
       //LEVEL 5 -
       else if (LEVEL === 5) {
         ball.radius = 5;
-        ball2.radius=5;
+        ball2.radius = 5;
       }
     }
     resetLife();
@@ -612,7 +612,7 @@ function showGameStats(text, textX, textY, img, imgX, imgY) {
 function draw() {
   drawPaddle();
 
-  if (LEVEL === 4 || LEVEL === 5) {
+  if (LEVEL === 3 || LEVEL === 4 || LEVEL === 5) {
     drawObstacle1();
     drawObstacle2();
   }
@@ -676,7 +676,7 @@ function update() {
 
   moveLife();
 
-  if (LEVEL === 4 || LEVEL === 5) {
+  if (LEVEL === 3 || LEVEL === 4 || LEVEL === 5) {
     obtacle1ball();
     obtacle2ball();
     obstacle1PaddleCollision();
@@ -738,6 +738,7 @@ function audioManager() {
   BRICK_HIT.muted = BRICK_HIT.muted ? false : true;
   WIN.muted = WIN.muted ? false : true;
   LIFE_LOST.muted = LIFE_LOST.muted ? false : true;
+  GAME_SOUND.muted = GAME_SOUND.muted ? false : true;
 }
 
 // SHOW GAME OVER MESSAGE
@@ -764,54 +765,50 @@ function showYouLose() {
   youlose.style.display = "block";
 }
 
-
-
 // PADDLE CONTROLS WITH MOUSE
-  document.addEventListener("mousemove", mouseMoveHandler, false);
-  // document.addEventListener("click", mouseMoveHandler, false);
+document.addEventListener("mousemove", mouseMoveHandler, false);
+// document.addEventListener("click", mouseMoveHandler, false);
 
-  function mouseMoveHandler(e) {
-    const relativeX = e.clientX - cvs.offsetLeft;
-    if (relativeX >= 0 && relativeX <= cvs.width) {
-      const newX = relativeX - paddle.width / 2;
-      if (newX < 0) {
-        paddle.x = 0;
-      } else if (newX + paddle.width > cvs.width) {
-        paddle.x = cvs.width - paddle.width;
-      } else {
-        paddle.x = newX;
-      }
+function mouseMoveHandler(e) {
+  const relativeX = e.clientX - cvs.offsetLeft;
+  if (relativeX >= 0 && relativeX <= cvs.width) {
+    const newX = relativeX - paddle.width / 2;
+    if (newX < 0) {
+      paddle.x = 0;
+    } else if (newX + paddle.width > cvs.width) {
+      paddle.x = cvs.width - paddle.width;
+    } else {
+      paddle.x = newX;
     }
   }
+}
 
+// PADDLE CONTROLS WITH TOUCH
+cvs.addEventListener("touchstart", handleStart, false);
+cvs.addEventListener("touchmove", handleMove, false);
 
+function handleStart(e) {
+  e.preventDefault();
+  let touchX = e.changedTouches[0].pageX - rect.left;
+  movePaddleOnTouch(touchX);
+}
 
-  // PADDLE CONTROLS WITH TOUCH
-  cvs.addEventListener("touchstart", handleStart, false);
-  cvs.addEventListener("touchmove", handleMove, false);
+function handleMove(e) {
+  e.preventDefault();
+  let touchX = e.changedTouches[0].pageX - rect.left;
+  movePaddleOnTouch(touchX);
+}
 
-  function handleStart(e) {
-    e.preventDefault();
-    let touchX = e.changedTouches[0].pageX - rect.left;
-    movePaddleOnTouch(touchX);
-  }
-
-  function handleMove(e) {
-    e.preventDefault();
-    let touchX = e.changedTouches[0].pageX - rect.left;
-    movePaddleOnTouch(touchX);
-  }
-
-  // MOVE PADDLE BY TOUCH
-  const movePaddleOnTouch = (touchX) => {
-    if (touchX >= 0 && touchX <= cvs.width) {
-      const newX = touchX - paddle.width / 2;
-      if (newX < 0) {
-        paddle.x = 0;
-      } else if (newX + paddle.width > cvs.width) {
-        paddle.x = cvs.width - paddle.width;
-      } else {
-        paddle.x = newX;
-      }
+// MOVE PADDLE BY TOUCH
+const movePaddleOnTouch = (touchX) => {
+  if (touchX >= 0 && touchX <= cvs.width) {
+    const newX = touchX - paddle.width / 2;
+    if (newX < 0) {
+      paddle.x = 0;
+    } else if (newX + paddle.width > cvs.width) {
+      paddle.x = cvs.width - paddle.width;
+    } else {
+      paddle.x = newX;
     }
   }
+};
